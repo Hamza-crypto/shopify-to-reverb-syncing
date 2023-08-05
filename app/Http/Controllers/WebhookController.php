@@ -9,6 +9,7 @@ use App\Notifications\LeadVertexNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Notification;
+use Spatie\DiscordAlerts\Facades\DiscordAlert;
 
 class WebhookController extends Controller
 {
@@ -17,10 +18,14 @@ class WebhookController extends Controller
         /*
          * This function get webhook notification from Shopify when new order is created
          */
-        $data = $request->all();
+        $product_id = $request->line_items[0]['product_id'];
 
-        app('log')->channel('shopify')->info($data);
-        dd($data);
+        app('log')->channel('shopify')->info($request->all());
+
+        $msg = "New order created for product " . $product_id;
+
+        DiscordAlert::message($msg);
+        dd('Done');
 
         if ($data['status'] != 'accepted') {
             return;
