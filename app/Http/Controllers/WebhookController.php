@@ -30,6 +30,11 @@ class WebhookController extends Controller
 
     }
 
+    public function get_etsy_code(Request $request)
+    {
+        app('log')->channel('shopify')->info($request->all());
+    }
+
     public function get_shopify_product_inventory_test($product_id = '6658541518928')
     {
         //Route for test

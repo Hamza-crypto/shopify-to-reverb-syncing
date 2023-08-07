@@ -26,4 +26,7 @@ Route::controller(WebhookController::class)->group(function () {
     Route::post('shopify-new-order', 'shopify_new_order'); // Shopify New Order
 
     Route::get('get_product', 'get_shopify_product_inventory_test');
+
+    Route::post('get_etsy_code', 'get_etsy_code'); // Get Etsy Code
+
 });

@@ -1,103 +1,201 @@
 {
-    "10": {
-        "datetime": "2023-02-24 12:40:06",
-        "timezone": -123,
-        "status": 9,
-        "statusGroup": "spam",
-        "price": 0,
-        "total": 59500,
-        "webmaster": {
-            "id": 1,
-            "login": "terraleads",
-            "sum": 500,
-            "paid": -1
-        },
-        "operatorID": null,
-        "domain": "",
-        "referer": "",
-        "ip": "",
-        "timeSpent": 0,
-        "utm_source": "",
-        "utm_medium": "",
-        "utm_term": "",
-        "utm_content": "",
-        "utm_campaign": "",
-        "lastUpdate": "2023-06-14 19:49:39",
-        "lastModify": "2023-06-26 19:12:42",
-        "goods": {
-            "193651": {
-                "goodID": "193651",
-                "name": "Erexper",
-                "quantity": "1",
-                "price": "11900",
-                "categoryID": "0",
-                "categoryName": "Без категории",
-                "purchasingPrice": "2500"
-            },
-            "193653": {
-                "goodID": "193653",
-                "name": "Immunomin",
-                "quantity": "1",
-                "price": "11900",
-                "categoryID": "0",
-                "categoryName": "Без категории",
-                "purchasingPrice": "2500"
-            },
-            "193654": {
-                "goodID": "193654",
-                "name": "Oftalmin",
-                "quantity": "1",
-                "price": "11900",
-                "categoryID": "0",
-                "categoryName": "Без категории",
-                "purchasingPrice": "2500"
-            },
-            "193655": {
-                "goodID": "193655",
-                "name": "Estrodim",
-                "quantity": "1",
-                "price": "11900",
-                "categoryID": "0",
-                "categoryName": "Без категории",
-                "purchasingPrice": "2500"
-            },
-            "193656": {
-                "goodID": "193656",
-                "name": "Life Factor",
-                "quantity": "1",
-                "price": "11900",
-                "categoryID": "0",
-                "categoryName": "Без категории",
-                "purchasingPrice": "2500"
-            }
-        },
-        "lastTextSms": null,
-        "lastVoiceSms": null,
-        "lastVoiceSmsStatus": null,
-        "callmodeRecallAt": "0000-00-00 00:00:00",
-        "approvedAt": "2023-06-14 12:25:40",
-        "canceledAt": "2023-05-30 23:41:52",
-        "shippedAt": "2023-06-14 12:08:23",
-        "buyoutAt": "2023-06-14 12:09:48",
-        "refundedAt": "2023-06-14 12:10:47",
-        "roboLog": "",
-        "recallLog": null,
-        "externalWebmaster": "14311",
-        "externalID": "24060468",
-        "similar": {
-            "phone": 1,
-            "ip": 0
-        },
-        "fio": "Hamza Siddique",
-        "country": "HU",
-        "postIndex": "47080",
-        "region": "",
-        "city": "Taxila",
-        "address": "Post Office Usman Khattar Taxila,Rawalpindi",
-        "phone": "36303461446",
-        "email": "6793siddique@gmail.com",
-        "quantity": "5",
-        "comment": "",
-        "additional1": ""
+  "id": 820982911946154500,
+  "admin_graphql_api_id": "gid://shopify/Order/820982911946154508",
+  "app_id": null,
+  "browser_ip": null,
+  "buyer_accepts_marketing": true,
+  "cancel_reason": "customer",
+  "cancelled_at": "2023-08-07T16:56:33-04:00",
+  "cart_token": null,
+  "checkout_id": null,
+  "checkout_token": null,
+  "client_details": null,
+  "closed_at": null,
+  "confirmation_number": null,
+  "confirmed": false,
+  "contact_email": "jon@example.com",
+  "created_at": "2023-08-07T16:56:33-04:00",
+  "currency": "CAD",
+  "current_subtotal_price": "1999.99",
+
+  "current_total_additional_fees_set": null,
+  "current_total_discounts": "0.00",
+
+  "current_total_duties_set": null,
+  "current_total_price": "1999.99",
+  "current_total_price_set": {
+    "shop_money": {
+      "amount": "1999.99",
+      "currency_code": "CAD"
+    },
+    "presentment_money": {
+      "amount": "1999.99",
+      "currency_code": "CAD"
     }
+  },
+  "current_total_tax": "0.00",
+  "current_total_tax_set": {
+    "shop_money": {
+      "amount": "0.00",
+      "currency_code": "CAD"
+    },
+    "presentment_money": {
+      "amount": "0.00",
+      "currency_code": "CAD"
+    }
+  },
+  "customer_locale": "en",
+  "device_id": null,
+  "discount_codes": [],
+  "email": "jon@example.com",
+  "estimated_taxes": false,
+  "financial_status": "voided",
+  "fulfillment_status": "pending",
+  "landing_site": null,
+  "landing_site_ref": null,
+  "location_id": null,
+  "merchant_of_record_app_id": null,
+  "name": "#9999",
+  "note": null,
+  "note_attributes": [],
+  "number": 234,
+  "order_number": 1234,
+  "order_status_url": "https://davesdrumshop.com/11071548/orders/123456abcd/authenticate?key=abcdefg",
+  "original_total_additional_fees_set": null,
+  "original_total_duties_set": null,
+  "phone": null,
+  "po_number": null,
+  "presentment_currency": "CAD",
+  "processed_at": null,
+  "reference": null,
+  "referring_site": null,
+  "source_identifier": null,
+  "source_name": "web",
+  "source_url": null,
+  "subtotal_price": "1989.99",
+
+  "tags": null,
+  "tax_exempt": false,
+  "tax_lines": [],
+  "taxes_included": false,
+  "test": true,
+  "token": "123456abcd",
+  "total_discounts": "20.00",
+  "total_discounts_set": {
+    "shop_money": {
+      "amount": "20.00",
+      "currency_code": "CAD"
+    },
+    "presentment_money": {
+      "amount": "20.00",
+      "currency_code": "CAD"
+    }
+  },
+  "total_line_items_price": "1999.99",
+  "total_line_items_price_set": {
+    "shop_money": {
+      "amount": "1999.99",
+      "currency_code": "CAD"
+    },
+    "presentment_money": {
+      "amount": "1999.99",
+      "currency_code": "CAD"
+    }
+  },
+  "total_outstanding": "1999.99",
+  "total_price": "1989.99",
+  "total_price_set": {
+    "shop_money": {
+      "amount": "1989.99",
+      "currency_code": "CAD"
+    },
+    "presentment_money": {
+      "amount": "1989.99",
+      "currency_code": "CAD"
+    }
+  },
+  "total_shipping_price_set": {
+    "shop_money": {
+      "amount": "10.00",
+      "currency_code": "CAD"
+    },
+    "presentment_money": {
+      "amount": "10.00",
+      "currency_code": "CAD"
+    }
+  },
+  "total_tax": "0.00",
+  "total_tax_set": {
+    "shop_money": {
+      "amount": "0.00",
+      "currency_code": "CAD"
+    },
+    "presentment_money": {
+      "amount": "0.00",
+      "currency_code": "CAD"
+    }
+  },
+  "total_tip_received": "0.00",
+  "total_weight": 0,
+  "updated_at": "2023-08-07T16:56:33-04:00",
+  "user_id": null,
+  "discount_applications": [],
+  "fulfillments": [],
+  "line_items": [
+    {
+      "id": 866550311766439000,
+      "admin_graphql_api_id": "gid://shopify/LineItem/866550311766439020",
+      "attributed_staffs": [
+        {
+          "id": "gid://shopify/StaffMember/902541635",
+          "quantity": 1
+        }
+      ],
+      "fulfillable_quantity": 1,
+      "fulfillment_service": "manual",
+      "fulfillment_status": null,
+      "gift_card": false,
+      "grams": 40000,
+      "name": "Ludwig 1972 5pc Butcher Block Set",
+      "price": "1500.00",
+      "price_set": {
+        "shop_money": {
+          "amount": "1500.00",
+          "currency_code": "CAD"
+        },
+        "presentment_money": {
+          "amount": "1500.00",
+          "currency_code": "CAD"
+        }
+      },
+      "product_exists": true,
+      "product_id": 3848144263,
+      "properties": [],
+      "quantity": 1,
+      "requires_shipping": true,
+      "sku": "15461",
+      "taxable": true,
+      "title": "Ludwig 1972 5pc Butcher Block Set",
+      "total_discount": "0.00",
+      "total_discount_set": {
+        "shop_money": {
+          "amount": "0.00",
+          "currency_code": "CAD"
+        },
+        "presentment_money": {
+          "amount": "0.00",
+          "currency_code": "CAD"
+        }
+      },
+      "variant_id": 12900026631,
+      "variant_inventory_management": "shopify",
+      "variant_title": null,
+      "vendor": null,
+      "tax_lines": [],
+      "duties": [],
+      "discount_allocations": []
+    }
+  ],
+  "payment_terms": null,
+  "refunds": []
 }
