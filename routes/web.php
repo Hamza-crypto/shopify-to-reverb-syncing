@@ -30,3 +30,20 @@ Route::controller(WebhookController::class)->group(function () {
     Route::post('get_etsy_code', 'get_etsy_code'); // Get Etsy Code
 
 });
+
+Route::get('/test2', function () {
+    // dump($response);
+    // dump($response['listings'][0]['id']);
+    $api_endpoint = "my/listings?sku=31234&state=all";
+    $api_endpoint = "listings/70161325";
+
+    $body = [
+        'has_inventory' => true,
+        'inventory' => 3,
+    ];
+
+    $webhook = new WebhookController();
+    $response = $webhook->reverb_call($api_endpoint, 'PUT', $body);
+    return $response;
+
+});

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2a5205ead17e0460fe986522903e37bf",
+    "content-hash": "8989922fa67b79c8bc1d564c7a83df28",
     "packages": [
         {
             "name": "brick/math",
@@ -3129,6 +3129,59 @@
                 }
             ],
             "time": "2023-04-15T23:01:58+00:00"
+        },
+        {
+            "name": "rhysnhall/etsy-php-sdk",
+            "version": "0.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rhysnhall/etsy-php-sdk.git",
+                "reference": "83005ce0830ae5d7fa1025695623900cd3003a12"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rhysnhall/etsy-php-sdk/zipball/83005ce0830ae5d7fa1025695623900cd3003a12",
+                "reference": "83005ce0830ae5d7fa1025695623900cd3003a12",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^7.3",
+                "php": ">=7.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Etsy\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Rhys Hall",
+                    "email": "hello@rhyshall.com",
+                    "homepage": "https://github.com/rhysnhall"
+                },
+                {
+                    "name": "Andrew Christensen",
+                    "email": "andrew@critical-code.com",
+                    "homepage": "https://github.com/erankco"
+                }
+            ],
+            "description": "PHP SDK for Etsy API v3.",
+            "keywords": [
+                "api",
+                "etsy",
+                "php",
+                "sdk"
+            ],
+            "support": {
+                "issues": "https://github.com/rhysnhall/etsy-php-sdk/issues",
+                "source": "https://github.com/rhysnhall/etsy-php-sdk/tree/v0.4.0"
+            },
+            "time": "2023-06-29T04:12:14+00:00"
         },
         {
             "name": "spatie/laravel-discord-alerts",
@@ -6664,5 +6717,5 @@
         "php": "^8.0.2"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.3.0"
 }
