@@ -21,10 +21,7 @@ class WebhookController extends Controller
 
         DiscordAlert::message($msg);
         $response = $this->get_shopify_product_inventory_count($product_id);
-        if ($response['inventory_quantity'] == null) {
-            return;
-        }
-
+        
         $msg = "Inventory count: " . $response['inventory_quantity'];
         DiscordAlert::message($msg);
 
