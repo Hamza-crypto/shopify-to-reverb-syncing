@@ -21,7 +21,7 @@ class WebhookController extends Controller
 
         DiscordAlert::message($msg);
         $response = $this->get_shopify_product_inventory_count($product_id);
-        
+
         $msg = "Inventory count: " . $response['inventory_quantity'];
         DiscordAlert::message($msg);
 
@@ -115,7 +115,7 @@ class WebhookController extends Controller
 
         $listing_id = $response['listings'][0]['id'];
 
-        $listing_id = '70161325';
+        // $listing_id = '70161325'; //This id is for testing purpose
         $api_endpoint = "listings/$listing_id";
         $body = [
             'has_inventory' => true,
