@@ -22,8 +22,10 @@ class WebhookController extends Controller
         DiscordAlert::message($msg);
         $response = $this->get_shopify_product_inventory_count($product_id);
 
-        if($response == null) return;
-        
+        if ($response == null) {
+            return;
+        }
+
         $msg = "Inventory count: " . $response['inventory_quantity'];
         DiscordAlert::message($msg);
 
@@ -115,7 +117,11 @@ class WebhookController extends Controller
         $api_endpoint = "my/listings?sku=$sku&state=all";
         $response = $this->reverb_call($api_endpoint);
 
-        $listing_id = $response['listings'][0]['id'];
+        try {
+            $listing_id = $response['listings'][0]['id'];
+        } catch (\Exception $e) {
+            return null;
+        }
 
         // $listing_id = '70161325'; //This id is for testing purpose
         $api_endpoint = "listings/$listing_id";
