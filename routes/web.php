@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ScrappingController;
 use App\Http\Controllers\WebhookController;
 use Illuminate\Support\Facades\Route;
 use Spatie\DiscordAlerts\Facades\DiscordAlert;
@@ -29,4 +30,8 @@ Route::controller(WebhookController::class)->group(function () {
 
     Route::post('get_etsy_code', 'get_etsy_code'); // Get Etsy Code
 
+});
+
+Route::controller(ScrappingController::class)->group(function () {
+    Route::get('playstore/{id}', 'playstore'); // Shopify New Order
 });
