@@ -1,29 +1,44 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Chart Example</title>
+    <!-- <meta http-equiv="refresh" content="3;"> -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
-<div class="chart-container" style="position: relative; height:400px; width:800px">
-    <canvas id="myChart"></canvas>
-</div>
 
-<script>
+    <div class="chart-container" style="position: relative; height:400px; width:1200px">
+        <canvas id="myChart"></canvas>
+    </div>
 
-    document.addEventListener('DOMContentLoaded', function () {
-        fetch('{{ route('chart.data') }}')
+    <form action="{{ route('chart.store') }}" method="POST">
+        @csrf();
+        @method('POST')
+        <label for="amount">Amount</label>
+        <input type="number" name="amount">
+
+        <input type="submit" value="Submit">
+    </form>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const monthValue = urlParams.get('month') || 12; 
+        fetch(`{{ route('chart.data') }}?month=${monthValue}`)
             .then(response => response.json())
             .then(data => {
                 const ctx = document.getElementById('myChart').getContext('2d');
                 const chart = new Chart(ctx, {
                     type: 'line',
                     data: {
-                        labels: Object.keys(data.createdData),
+                        labels: data.labels,
                         datasets: [{
                             label: 'Created',
                             borderColor: 'rgb(75, 192, 192)',
-                            data: Object.values(data.createdData),
+                            data: Object.values(data.data),
                             fill: false
                         }]
                     },
@@ -36,15 +51,13 @@
                                     display: true,
                                     text: 'Date'
                                 },
-                                ticks: {
-                                    maxTicksLimit: 23 // Set the maximum number of ticks on the x-axis
-                                }
+                               
                             },
                             y: {
                                 display: true,
                                 title: {
                                     display: true,
-                                    text: 'Number of Orders'
+                                    text: 'Amount'
                                 }
                             }
                         }
@@ -53,10 +66,7 @@
 
             });
     });
-
-
-
-
-</script>
+    </script>
 </body>
+
 </html>
