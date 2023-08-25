@@ -3,6 +3,7 @@
 use App\Http\Controllers\ChartController;
 use App\Http\Controllers\ScrappingController;
 use App\Http\Controllers\WebhookController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Spatie\DiscordAlerts\Facades\DiscordAlert;
 
@@ -22,6 +23,10 @@ Route::get('/test', function () {
     $result = "This is just test page" . time();
     echo $result;
     DiscordAlert::message($result);
+});
+
+Route::get('/reset', function () {
+    Artisan::call('migrate:fresh');
 });
 
 Route::controller(WebhookController::class)->group(function () {
