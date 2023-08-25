@@ -33,7 +33,7 @@ class ScrappingController extends Controller
                 $data[] = $this->parse_detail_page($linkedPageUrl, $client);
             });
 
-            // header('Content-Type: application/json');
+            header('Content-Type: application/json');
             echo json_encode($data);
 
         } catch (\Exception $e) {
