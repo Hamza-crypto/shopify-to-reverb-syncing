@@ -131,6 +131,8 @@ class WebhookController extends Controller
         ];
 
         $response = $this->reverb_call($api_endpoint, 'PUT', $body);
+        $msg = sprintf("Inventory updated on Reverb for sku %s with inventory count %s", $sku, $inventory_count);
+        DiscordAlert::message($msg);
         return $response;
 
     }
