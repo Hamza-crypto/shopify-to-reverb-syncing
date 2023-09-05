@@ -29,16 +29,7 @@ class WebhookController extends Controller
         $msg = "Inventory count: " . $response['inventory_quantity'];
         DiscordAlert::message($msg);
 
-        $response = $this->update_inventory_on_reverb($response['sku'], $response['inventory_quantity']);
-
-        $result = "";
-        foreach ($response as $key => $value) {
-            $result .= $key . ': ' . (is_array($value) ? json_encode($value) : $value) . ', ';
-        }
-
-        $result = rtrim($result, ', ');
-        $result = substr($result, 0, 2000);
-        DiscordAlert::message($result);
+        $this->update_inventory_on_reverb($response['sku'], $response['inventory_quantity']);
     }
 
     public function get_etsy_code(Request $request)
@@ -118,6 +109,8 @@ class WebhookController extends Controller
         $response = $this->reverb_call($api_endpoint);
 
         try {
+            $msg = convertResponseToString($response);
+            DiscordAlert::message($msg);
             $listing_id = $response['listings'][0]['id'];
         } catch (\Exception $e) {
             return null;
@@ -133,7 +126,10 @@ class WebhookController extends Controller
         $response = $this->reverb_call($api_endpoint, 'PUT', $body);
         $msg = sprintf("Inventory updated on Reverb for sku %s with inventory count %s", $sku, $inventory_count);
         DiscordAlert::message($msg);
-        return $response;
+        $msg = convertResponseToString($response);
+        DiscordAlert::message($msg);
+        
+
 
     }
 
