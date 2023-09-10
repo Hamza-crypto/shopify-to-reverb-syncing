@@ -13,6 +13,7 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         'shopify-new-order',
+        'shopify-product-updated',
         'get_etsy_code',
     ];
 }

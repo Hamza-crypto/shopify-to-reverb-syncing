@@ -32,6 +32,21 @@ class WebhookController extends Controller
         $this->update_inventory_on_reverb($response['sku'], $response['inventory_quantity']);
     }
 
+    public function shopify_product_updated(Request $request)
+    {
+        /*
+         * This function get webhook notification from Shopify when product is updated
+         */
+
+        if ($request->product_type == 'drum kit') {
+            $sku = $request->variants[0]['sku'];
+            $inventory_quantity = $request->variants[0]['inventory_quantity'];
+
+            $this->update_inventory_on_reverb($sku, $inventory_quantity);
+        }
+
+    }
+
     public function get_etsy_code(Request $request)
     {
         app('log')->channel('shopify')->info($request->all());
@@ -128,9 +143,6 @@ class WebhookController extends Controller
         DiscordAlert::message($msg);
         $msg = convertResponseToString($response);
         DiscordAlert::message($msg);
-        
-
-
     }
 
 }
