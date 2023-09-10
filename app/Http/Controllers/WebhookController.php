@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Spatie\DiscordAlerts\Facades\DiscordAlert;
@@ -37,14 +38,27 @@ class WebhookController extends Controller
         /*
          * This function get webhook notification from Shopify when product is updated
          */
+        
+        Product::create([
+            'inventory_id' => $request->input('variants')[0]['inventory_item_id'],
+            'sku' => $request->input('variants')[0]['sku'],
+        ]);
+    }
 
-        if ($request->product_type == 'drum kit') {
-            $sku = $request->variants[0]['sku'];
-            $inventory_quantity = $request->variants[0]['inventory_quantity'];
+    public function shopify_inventory_lev_updated(Request $request)
+    {
+        /*
+         * This function get webhook notification from Shopify when product inventory level is updated
+         */
 
-            $this->update_inventory_on_reverb($sku, $inventory_quantity);
+        $inventoryItemId = $request->input('inventory_item_id');
+        $product = Product::where('inventory_id', $inventoryItemId)->first();
+
+        if ($product) {
+            
+            $this->update_inventory_on_reverb($product->sku, $request->input('available'));
+            
         }
-
     }
 
     public function get_etsy_code(Request $request)
@@ -143,6 +157,9 @@ class WebhookController extends Controller
         DiscordAlert::message($msg);
         $msg = convertResponseToString($response);
         DiscordAlert::message($msg);
+
+
+
     }
 
 }
