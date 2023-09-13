@@ -15,7 +15,7 @@ class WebhookController extends Controller
          * This function get webhook notification from Shopify when new order is created
          */
         $product_id = $request->line_items[0]['product_id'];
-
+       
         app('log')->channel('shopify')->info($request->all());
 
         $msg = "New order created for product " . $product_id;
@@ -38,11 +38,12 @@ class WebhookController extends Controller
         /*
          * This function get webhook notification from Shopify when product is updated
          */
+        if($request->product_type != 'drum kit') return 200;
         
-        Product::create([
-            'inventory_id' => $request->input('variants')[0]['inventory_item_id'],
-            'sku' => $request->input('variants')[0]['sku'],
-        ]);
+        $sku = $request->variants[0]['sku'];
+        $inventory_quantity = $request->variants[0]['inventory_quantity'];
+        
+        $this->update_inventory_on_reverb($sku, $inventory_quantity);
     }
 
     public function shopify_inventory_lev_updated(Request $request)

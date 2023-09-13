@@ -3,7 +3,9 @@
 use App\Http\Controllers\ChartController;
 use App\Http\Controllers\ScrappingController;
 use App\Http\Controllers\WebhookController;
+use App\Mail\AlertMail;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Spatie\DiscordAlerts\Facades\DiscordAlert;
 
@@ -32,7 +34,7 @@ Route::get('/reset', function () {
 Route::controller(WebhookController::class)->group(function () {
     Route::post('shopify-new-order', 'shopify_new_order'); // Shopify New Order
     Route::post('shopify-product-updated', 'shopify_product_updated'); // Shopify Product Updated
-    Route::post('shopify-inventory-lev-updated', 'shopify_inventory_lev_updated'); // Shopify Product Inventory Level
+    // Route::post('shopify-inventory-lev-updated', 'shopify_inventory_lev_updated'); // Shopify Product Inventory Level
 
     Route::get('get_product', 'get_shopify_product_inventory_test');
 
