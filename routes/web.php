@@ -1,11 +1,9 @@
 <?php
 
 use App\Http\Controllers\ChartController;
-use App\Http\Controllers\ScrappingController;
 use App\Http\Controllers\WebhookController;
-use App\Mail\AlertMail;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 use Spatie\DiscordAlerts\Facades\DiscordAlert;
 
@@ -21,8 +19,45 @@ use Spatie\DiscordAlerts\Facades\DiscordAlert;
  */
 Route::view('/', 'welcome');
 
+Route::get('/test2', function () {
+    // Path to the JSON file in the public directory
+    $filePath = public_path('reverb-orders.json');
+
+    // Read the JSON file
+    $jsonContent = File::get($filePath);
+    $data = json_decode($jsonContent, true);
+
+    $orderDetails = [];
+    $ordersWithoutInventory = [];
+
+    // Collect product_id, remaining listing inventory, and UUID for each order
+    foreach ($data['orders'] as $order) {
+        $productId = $order['product_id'];
+
+        // Check if 'remaining_listing_inventory' key exists in the order
+        if (isset($order['remaining_listing_inventory'])) {
+            $remainingInventory = $order['remaining_listing_inventory'];
+        } else {
+            // If the key doesn't exist, add the UUID to the separate array
+            $ordersWithoutInventory[] = $order['uuid'];
+            $remainingInventory = null; // Set remaining inventory to null for these orders
+        }
+
+        // Add order details to the array
+        $orderDetails[] = [
+            'product_id' => $productId,
+            'remaining_listing_inventory' => $remainingInventory,
+        ];
+    }
+
+    return response()->json([
+        'order_details' => $orderDetails,
+        'orders_without_inventory' => $ordersWithoutInventory,
+    ]);
+});
+
 Route::get('/test', function () {
-    $result = "This is just test page" . time();
+    $result = 'This is just test page'.time();
     echo $result;
     DiscordAlert::message($result);
 });
@@ -31,19 +66,9 @@ Route::get('/reset', function () {
     Artisan::call('migrate:fresh');
 });
 
-Route::controller(WebhookController::class)->group(function () {
-    Route::post('shopify-new-order', 'shopify_new_order'); // Shopify New Order
-    Route::post('shopify-product-updated', 'shopify_product_updated'); // Shopify Product Updated
-    // Route::post('shopify-inventory-lev-updated', 'shopify_inventory_lev_updated'); // Shopify Product Inventory Level
-
-    Route::get('get_product', 'get_shopify_product_inventory_test');
-
-    Route::post('get_etsy_code', 'get_etsy_code'); // Get Etsy Code
-
-});
-
-Route::controller(ScrappingController::class)->group(function () {
-    Route::get('playstore/{id}', 'playstore'); // Shopify New Order
+Route::prefix('shopify')->controller(WebhookController::class)->group(function () {
+    Route::post('new_order', 'shopify_new_order'); // webhook when new order is placed on shopify
+    Route::post('product_updated', 'shopify_product_updated'); //webhook when product inventory quantity is updated  in shopify admin dashboard
 });
 
 Route::controller(ChartController::class)->group(function () {

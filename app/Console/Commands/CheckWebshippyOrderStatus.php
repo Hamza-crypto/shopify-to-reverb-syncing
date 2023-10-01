@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Http\Controllers\WebshippyOrdersController;
-
 use Illuminate\Console\Command;
 
 class CheckWebshippyOrderStatus extends Command
@@ -16,6 +15,7 @@ class CheckWebshippyOrderStatus extends Command
     {
         $controller = new WebshippyOrdersController();
         $controller->UpdateOrders();
+
         return Command::SUCCESS;
     }
 }
