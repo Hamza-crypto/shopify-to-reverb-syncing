@@ -20,7 +20,6 @@ class ReverbController extends Controller
         }
 
         return $response->json();
-
     }
 
     public function update_inventory_on_reverb($sku, $inventory_count)
@@ -48,5 +47,16 @@ class ReverbController extends Controller
         DiscordAlert::message($msg);
         $msg = convertResponseToString($response);
         DiscordAlert::message($msg);
+    }
+
+    public function fetch_all_orders($start_date = "2023-09-20T12:00-00:00")
+    {
+        $url = sprintf("%s%s", "my/orders/selling/all?updated_start_date=", $start_date);
+        $orders = $this->reverb_call($url);
+        return $orders['orders'];
+    }
+
+    public function get_reverb_product($product_id) {
+        return $this->reverb_call("listings/$product_id");
     }
 }

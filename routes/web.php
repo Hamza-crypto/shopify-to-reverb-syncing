@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\ChartController;
+use App\Http\Controllers\ShopifyController;
 use App\Http\Controllers\WebhookController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Http;
 use Spatie\DiscordAlerts\Facades\DiscordAlert;
 
 /*
@@ -20,44 +22,20 @@ use Spatie\DiscordAlerts\Facades\DiscordAlert;
 Route::view('/', 'welcome');
 
 Route::get('/test2', function () {
-    // Path to the JSON file in the public directory
-    $filePath = public_path('reverb-orders.json');
-
-    // Read the JSON file
-    $jsonContent = File::get($filePath);
-    $data = json_decode($jsonContent, true);
-
-    $orderDetails = [];
-    $ordersWithoutInventory = [];
-
-    // Collect product_id, remaining listing inventory, and UUID for each order
-    foreach ($data['orders'] as $order) {
-        $productId = $order['product_id'];
-
-        // Check if 'remaining_listing_inventory' key exists in the order
-        if (isset($order['remaining_listing_inventory'])) {
-            $remainingInventory = $order['remaining_listing_inventory'];
-        } else {
-            // If the key doesn't exist, add the UUID to the separate array
-            $ordersWithoutInventory[] = $order['uuid'];
-            $remainingInventory = null; // Set remaining inventory to null for these orders
-        }
-
-        // Add order details to the array
-        $orderDetails[] = [
-            'product_id' => $productId,
-            'remaining_listing_inventory' => $remainingInventory,
-        ];
+    $shopify_controller = new ShopifyController();
+    $products = $shopify_controller->fetch_products();
+    $last_product_id = 0;
+    foreach ($products as $product) {
+        $shopify_controller->store_product($product);
+        $last_product_id = $product['id'];
     }
 
-    return response()->json([
-        'order_details' => $orderDetails,
-        'orders_without_inventory' => $ordersWithoutInventory,
-    ]);
+    dump("Last ID: $last_product_id");
+
 });
 
 Route::get('/test', function () {
-    $result = 'This is just test page'.time();
+    $result = 'This is just test page' . time();
     echo $result;
     DiscordAlert::message($result);
 });

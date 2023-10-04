@@ -15,6 +15,7 @@
         "laravel/sanctum": "^3.0",
         "laravel/telescope": "^4.14",
         "laravel/tinker": "^2.7",
+        "shopify/shopify-api": "^4.3",
         "spatie/laravel-discord-alerts": "^1.2"
     },
     "require-dev": {

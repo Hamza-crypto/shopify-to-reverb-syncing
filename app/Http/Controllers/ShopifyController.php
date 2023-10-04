@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use Illuminate\Support\Facades\Http;
 
 class ShopifyController extends Controller
@@ -14,7 +15,7 @@ class ShopifyController extends Controller
         $url = sprintf('https://%s.myshopify.com/admin/api/%s/%s', $shop, $version, $api_endpoint);
 
         if (! is_null($query) && in_array($method, ['GET', 'DELETE'])) {
-            $url = $url.'?'.http_build_query($query);
+            $url = $url . '?' . http_build_query($query);
         }
 
         $headers = [];
@@ -26,11 +27,36 @@ class ShopifyController extends Controller
         $response = Http::withHeaders($headers)
             ->withOptions([
                 'verify' => false, // Disable SSL verification, use with caution!
-                'timeout' => 30, // Set the connection timeout
             ])
             ->{$method}($url, $query);
 
         return $response->json();
+    }
+
+    public function shopify_call2($api_endpoint, $query = [], $method = 'GET', $request_headers = [])
+    {
+        $shop = env('SHOP_NAME');
+        $token = env('SHOPIFY_TOKEN');
+        $version = env('SHOPIFY_VERSION');
+        $url = sprintf('https://%s.myshopify.com/admin/api/%s/%s', $shop, $version, $api_endpoint);
+
+        if (! is_null($query) && in_array($method, ['GET', 'DELETE'])) {
+            $url = $url . '?' . http_build_query($query);
+        }
+
+        $headers = [];
+        $headers['Content-Type'] = 'application/json';
+        if (! is_null($token)) {
+            $headers['X-Shopify-Access-Token'] = $token;
+        }
+
+        $response = Http::withHeaders($headers)
+            ->withOptions([
+                'verify' => false, // Disable SSL verification, use with caution!
+            ])
+            ->{$method}($url, $query);
+
+        return $response;
     }
 
     public function get_shopify_product_inventory_count($product_id)
@@ -46,6 +72,61 @@ class ShopifyController extends Controller
         } else {
             return null;
         }
+
+    }
+
+    // $file_path = public_path('shopify-products.json');
+        // $json_data = file_get_contents($file_path);
+        // $products = json_decode($json_data, true);
+        // return $products;
+
+
+public function fetch_products($start_id = null)
+{
+    $url = "products.json?collection_id=266922590288&fields=id,title,variants&limit=240";
+    if ($start_id) {
+        $url .= "&since_id={$start_id}";
+    }
+
+    $products = [];
+
+    do {
+        $response = $this->shopify_call2($url);
+
+        // Process the response and extract products
+        $products = array_merge($products, $response['products']);
+
+        // Check if there's a next page
+        $next_page_url = null;
+        if (isset($response['headers']['link'])) {
+            dd($response);
+            $link_header = $response['headers']['link'];
+            $matches = [];
+            if (preg_match('/<([^>]+)>; rel="next"/', $link_header, $matches)) {
+                $next_page_url = $matches[1];
+                $url = $next_page_url;
+            }
+        }
+    } while ($next_page_url);
+
+    return $products;
+}
+
+    public function store_product($product)
+    {
+        try {
+            Product::create([
+                        'product_id' => $product['id'],
+                        'name' => $product['title'],
+                        'sku' => $product['variants'][0]['sku'],
+                        'quantity' => $product['variants'][0]['inventory_quantity'],
+                    ]);
+        }
+        catch(\Exception $e) {
+            echo $e->getMessage() . '<br>';
+        }
+
+
 
     }
 }
