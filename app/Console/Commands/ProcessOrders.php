@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Http\Controllers\ReverbController;
 use App\Http\Controllers\ShopifyController;
+use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
@@ -27,11 +28,9 @@ class ProcessOrders extends Command
 
         // Subtract 1 hour
         $oneHourAgo = $currentDateTime->subHour();
+        $oneHourAgo = $currentDateTime->subDays(3);
 
-        // Format the date and time in the desired format
-        // $start_date = $oneHourAgo->format("Y-m-d\TH:i:sP");
-        $start_date = "2023-10-03T00:00:00+00:00";
-        $orders = $reverb_controller->fetch_all_orders($start_date);
+        $orders = $reverb_controller->fetch_all_orders($oneHourAgo);
 
         foreach ($orders as $order) {
             if ($order['status'] == 'shipped') {
@@ -42,7 +41,8 @@ class ProcessOrders extends Command
                 $sku = $reverb_product['sku'];
                 dump($inventory, $sku);
                 // Get product details
-                // $product = $productService->getProductDetails($productId);
+                $product = Product::where('sku', $sku)->first();
+                $product = $productService->getProductDetails($product->id);
 
                 // Update product quantity on Shopify
                 // $productService->updateProductQuantityOnShopify($product->id, $newQuantity);

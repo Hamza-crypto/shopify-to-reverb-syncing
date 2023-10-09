@@ -7,7 +7,6 @@ use Illuminate\Console\Command;
 
 class FetchProducts extends Command
 {
-
     protected $signature = 'fetch:shopify-products';
 
     protected $description = 'Fetch products from Shopify and store into database';
@@ -17,8 +16,7 @@ class FetchProducts extends Command
         $shopify_controller = new ShopifyController();
         $products = $shopify_controller->fetch_products();
         foreach ($products as $product) {
-            dump($product);
-            break;
+            // dd($product);
             $shopify_controller->store_product($product);
         }
 

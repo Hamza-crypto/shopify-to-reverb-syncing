@@ -22,15 +22,8 @@ use Spatie\DiscordAlerts\Facades\DiscordAlert;
 Route::view('/', 'welcome');
 
 Route::get('/test2', function () {
-    $shopify_controller = new ShopifyController();
-    $products = $shopify_controller->fetch_products();
-    $last_product_id = 0;
-    foreach ($products as $product) {
-        $shopify_controller->store_product($product);
-        $last_product_id = $product['id'];
-    }
 
-    dump("Last ID: $last_product_id");
+    Artisan::call('process:reverb-orders');
 
 });
 
