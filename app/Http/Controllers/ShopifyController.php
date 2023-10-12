@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Support\Facades\Http;
+use Spatie\DiscordAlerts\Facades\DiscordAlert;
 
 class ShopifyController extends Controller
 {
@@ -168,7 +170,7 @@ class ShopifyController extends Controller
 
     }
 
-    public function update_inventory($inventory_item_id, $quantity)
+    public function update_inventory($inventory_item_id, $quantity, $db_order_id, $shopify_product_id)
     {
         $param = [
             'inventory_item_id' => $inventory_item_id,
@@ -178,5 +180,8 @@ class ShopifyController extends Controller
 
         $this->shopify_call('inventory_levels/adjust.json', $param, 'POST');
 
+        Order::where('id', $db_order_id)->update(['inventory_updated' => 1]);
+
+        DiscordAlert::message(sprintf('Inventory updated on shopify for product %s', $shopify_product_id));
     }
 }

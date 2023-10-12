@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use Illuminate\Support\Facades\Http;
 use Spatie\DiscordAlerts\Facades\DiscordAlert;
 
@@ -56,7 +57,20 @@ class ReverbController extends Controller
         return $orders['orders'];
     }
 
+    public function fetch_single_order($order_id)
+    {
+        $url = sprintf("%s%s", "my/orders/selling/", $order_id);
+        $order = $this->reverb_call($url);
+        return $order;
+    }
+
+
     public function get_reverb_product($product_id) {
         return $this->reverb_call("listings/$product_id");
+    }
+
+    public function fetch_orders_from_db()
+    {
+        return Order::where('inventory_updated', 0)->get();
     }
 }

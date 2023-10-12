@@ -24,18 +24,14 @@ class ProcessOrders extends Command
         $reverb_controller = new ReverbController();
         $shopify_controller = new ShopifyController();
 
-        $currentDateTime = Carbon::now();
+        $orders_db = $reverb_controller->fetch_orders_from_db();
 
-        // Subtract 1 hour
-        $oneHourAgo = $currentDateTime->subHour();
-        // $oneHourAgo = $currentDateTime->subDays(10);
-
-        $orders = $reverb_controller->fetch_all_orders($oneHourAgo);
-
-        foreach ($orders as $order) {
-            if ($order['status'] == 'shipped') {
+        foreach ($orders_db as $order_db) {
+            $order = $reverb_controller->fetch_single_order($order_db->order_id);
+            if (in_array($order['status'], ['paid', 'shipped', 'picked_up', 'received'])) {
 
                 $productId = $order['product_id'];
+
                 $reverb_product = $reverb_controller->get_reverb_product($productId);
                 $reverb_inventory = $reverb_product['inventory'];
                 $sku = $reverb_product['sku'];
@@ -52,7 +48,7 @@ class ProcessOrders extends Command
 
                 $adjustmentQuantity = $reverb_inventory - $shopifyProduct['inventory_quantity'];
                 if($adjustmentQuantity != 0) {
-                    $shopify_controller->update_inventory($shopifyProduct['inventory_item_id'], $adjustmentQuantity);
+                    $shopify_controller->update_inventory($shopifyProduct['inventory_item_id'], $adjustmentQuantity, $order_db->id, $productObject->product_id);
                 }
             }
         }
