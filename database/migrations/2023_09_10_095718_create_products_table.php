@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('product_id')->unique();
             $table->string('name');
+            $table->string('category');
             $table->string('sku');
             $table->integer('quantity');
             $table->timestamps();

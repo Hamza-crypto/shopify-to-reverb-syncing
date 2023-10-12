@@ -33,15 +33,12 @@ class ShopifyController extends Controller
         return $response->json();
     }
 
-    public function shopify_call2($api_endpoint, $query = [], $method = 'GET', $request_headers = [])
+    public function shopify_call2($url, $query = [], $method = 'GET')
     {
-        $shop = env('SHOP_NAME');
         $token = env('SHOPIFY_TOKEN');
-        $version = env('SHOPIFY_VERSION');
-        $url = sprintf('https://%s.myshopify.com/admin/api/%s/%s', $shop, $version, $api_endpoint);
 
-        if (! is_null($query) && in_array($method, ['GET', 'DELETE'])) {
-            $url = $url . '?' . http_build_query($query);
+        if (!empty($query)) {
+            $url .= http_build_query($query);
         }
 
         $headers = [];
@@ -49,12 +46,12 @@ class ShopifyController extends Controller
         if (! is_null($token)) {
             $headers['X-Shopify-Access-Token'] = $token;
         }
+        dump($url);
         $response = Http::withHeaders($headers)
             ->withOptions([
                 'verify' => false, // Disable SSL verification, use with caution!
             ])
-            ->{$method}($url, $query);
-
+            ->{$method}($url);
         return $response;
     }
 
@@ -74,40 +71,80 @@ class ShopifyController extends Controller
 
     }
 
-    public function fetch_products($start_id = null)
+    public function get_shopify_product_inventory_item($product_id)
     {
-        // $file_path = public_path('response5.json');
-        // $json_data = file_get_contents($file_path);
-        // $products = json_decode($json_data, true);
-        // return $products['products'];
+        $url = sprintf('products/%s.json', $product_id);
+        $response = $this->shopify_call($url);
+        if ($response['product']['product_type'] == 'drum kit') { //If this product is within specific product type
+            return [
+                'inventory_quantity' => $response['product']['variants'][0]['inventory_quantity'],
+                'inventory_item_id' => $response['product']['variants'][0]['inventory_item_id'],
+            ];
 
-        $url = "products.json?collection_id=266922590288&limit=3";
-        if ($start_id) {
-            $url .= "&since_id={$start_id}";
+        } else {
+            return null;
         }
-        //Below logic does not seems to be working correctly
-        $products = [];
+
+    }
+
+    public function fetchAndStoreProducts()
+    {
+        $shop = env('SHOP_NAME');
+        $version = env('SHOPIFY_VERSION');
+        $api_endpoint = 'products.json?';
+        $nextPageUrl = sprintf('https://%s.myshopify.com/admin/api/%s/%s', $shop, $version, $api_endpoint);
+
+        $productsFetched = 0;
+
+        $queryParams = [
+                // 'product_type' => 'drum kit',
+                'limit' => 250
+            ];
 
         do {
-            $response = $this->shopify_call2($url);
-            dd($response['products']);
-            dd($response->header('Link'));
-            // Process the response and extract products
-            $products = array_merge($products, $response['products']);
+            $response = $this->shopify_call2($nextPageUrl, $queryParams);
+            $products = $response['products'];
 
-            // Check if there's a next page
-            $next_page_url = null;
-            if (isset($response['headers']['link'])) {
-                $link_header = $response['headers']['link'];
-                $matches = [];
-                if (preg_match('/<([^>]+)>; rel="next"/', $link_header, $matches)) {
-                    $next_page_url = $matches[1];
-                    $url = $next_page_url;
-                }
+
+            foreach ($products as $product) {
+                $this->store_product($product);
+                $productsFetched++;
             }
-        } while ($next_page_url);
 
-        return $products;
+            // Extract the next page URL from the "Link" header
+            $nextPageUrl = $this->getNextPageUrl($response);
+            $queryParams = []; // Because we are getting full url from headers along with query params
+
+        } while ($nextPageUrl);
+
+        return response()->json(['message' => "Fetched and stored $productsFetched products."]);
+    }
+
+    private function getNextPageUrl($response)
+    {
+        $linkHeader = $response->header('Link');
+
+        if (preg_match('/<([^>]*)>; rel="next"/', $linkHeader, $matches)) {
+            return $matches[1];
+        }
+        return null;
+    }
+
+    public function fetch_products_from_files($num_files = 4)
+    {
+        $all_products = [];
+
+        for ($i = 1; $i <= $num_files; $i++) {
+            $file_path = public_path('response' . $i . '.json');
+
+            if (file_exists($file_path)) {
+                $json_data = file_get_contents($file_path);
+                $products = json_decode($json_data, true);
+                $all_products = array_merge($all_products, $products['products']);
+            }
+        }
+
+        return $all_products;
     }
 
     public function store_product($product)
@@ -117,6 +154,7 @@ class ShopifyController extends Controller
                 Product::create([
                                         'product_id' => $product['id'],
                                         'name' => $product['title'],
+                                        'category' => $product['product_type'],
                                         'sku' => $product['variants'][0]['sku'],
                                         'quantity' => $product['variants'][0]['inventory_quantity'],
                                     ]);
@@ -127,6 +165,18 @@ class ShopifyController extends Controller
         }
 
 
+
+    }
+
+    public function update_inventory($inventory_item_id, $quantity)
+    {
+        $param = [
+            'inventory_item_id' => $inventory_item_id,
+            'location_id' => '69274665184',
+            'available_adjustment' => $quantity
+        ];
+
+        $this->shopify_call('inventory_levels/adjust.json', $param, 'POST');
 
     }
 }

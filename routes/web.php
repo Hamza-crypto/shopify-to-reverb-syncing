@@ -19,12 +19,33 @@ use Spatie\DiscordAlerts\Facades\DiscordAlert;
 | contains the "web" middleware group. Now create something great!
 |
  */
+
+ Route::get('/update-shopify', function () {
+    $shopify = new ShopifyController();
+    $shopifyProduct = $shopify->get_shopify_product_inventory_item('7901765107936');
+    $reverb_inventory = 3;
+
+    dump("Previous : " . $shopifyProduct['inventory_quantity']);
+    dump("New : " . $reverb_inventory);
+    $adjustmentQuantity = $reverb_inventory - $shopifyProduct['inventory_quantity'];
+
+    dump("adjustmentQuantity : " . $adjustmentQuantity);
+    if($adjustmentQuantity != 0){
+        $shopify->update_inventory($shopifyProduct['inventory_item_id'], $adjustmentQuantity);
+    }
+
+
+});
+
+
 Route::view('/', 'welcome');
 
-Route::get('/test2', function () {
-
+Route::get('/process-orders', function () {
     Artisan::call('process:reverb-orders');
+});
 
+Route::get('/fetch-products', function () {
+    Artisan::call('fetch:shopify-products');
 });
 
 Route::get('/test', function () {
