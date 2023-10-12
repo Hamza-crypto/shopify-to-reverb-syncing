@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('process:reverb-orders')->everyHour();
+        $schedule->command('reverb-test')->everyMinute();
         $schedule->command('telescope:prune --hours=168')->daily();
     }
 
