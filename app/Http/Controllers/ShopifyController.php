@@ -172,7 +172,7 @@ class ShopifyController extends Controller
     {
         $param = [
             'inventory_item_id' => $inventory_item_id,
-            'location_id' => '69274665184',
+            'location_id' => env('SHOPIFY_LOCATION_ID'),
             'available_adjustment' => $quantity
         ];
 
