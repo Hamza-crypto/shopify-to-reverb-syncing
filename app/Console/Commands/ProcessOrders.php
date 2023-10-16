@@ -44,7 +44,8 @@ class ProcessOrders extends Command
                 }
 
                 //Get shopify product current inventory count and inventory_item_id
-                $shopifyProduct = $shopify_controller->get_shopify_product_inventory_count($productObject->product_id);
+                $shopifyProduct = $shopify_controller->get_shopify_product_inventory_item($productObject->product_id);
+
 
                 $adjustmentQuantity = $reverb_inventory - $shopifyProduct['inventory_quantity'];
                 if($adjustmentQuantity != 0) {
