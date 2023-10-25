@@ -29,14 +29,14 @@ class ReverbController extends Controller
         $response = $this->reverb_call($api_endpoint);
 
         try {
-            $msg = convertResponseToString($response);
-            DiscordAlert::message($msg);
+            // $msg = convertResponseToString($response);
+            // DiscordAlert::message($msg);
             $listing_id = $response['listings'][0]['id'];
         } catch (\Exception $e) {
             return null;
         }
 
-        $listing_id = '70161325'; //This id is for testing purpose
+        // $listing_id = '70161325'; //This id is for testing purpose
         $api_endpoint = "listings/$listing_id";
         $body = [
             'has_inventory' => true,
@@ -46,8 +46,8 @@ class ReverbController extends Controller
         $response = $this->reverb_call($api_endpoint, 'PUT', $body);
         $msg = sprintf('Inventory updated on Reverb for sku %s with inventory count %s', $sku, $inventory_count);
         DiscordAlert::message($msg);
-        $msg = convertResponseToString($response);
-        DiscordAlert::message($msg);
+        // $msg = convertResponseToString($response);
+        // DiscordAlert::message($msg);
     }
 
     public function fetch_all_orders($start_date = "2023-09-20T12:00-00:00")

@@ -13,7 +13,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('fetch:reverb-orders')->hourly();
         $schedule->command('process:reverb-orders')->hourly();
         // $schedule->command('reverb-test')->everyMinute();
-        $schedule->command('telescope:prune --hours=168')->daily();
+        $schedule->command('telescope:prune --hours=720')->daily();
     }
 
     /**
