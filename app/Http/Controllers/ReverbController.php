@@ -24,7 +24,12 @@ class ReverbController extends Controller
             ])->put($url, $body);
 
         } elseif ($method == 'GET') {
-            $response = Http::withToken($token)->get($url);
+            $response = Http::withToken($token)
+            ->withHeaders([
+                'Content-Type' => 'application/hal+json',
+                'Accept' => 'application/hal+json',
+                'Accept-Version' => '3.0'
+            ])->get($url);
         } elseif ($method == 'POST') {
             $response = Http::withToken($token)
              ->withHeaders([
