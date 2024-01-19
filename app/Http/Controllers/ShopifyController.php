@@ -49,19 +49,18 @@ class ShopifyController extends Controller
             $headers['X-Shopify-Access-Token'] = $token;
         }
         dump($url);
-        $response = Http::withHeaders($headers)
+        return Http::withHeaders($headers)
             ->withOptions([
                 'verify' => false, // Disable SSL verification, use with caution!
             ])
             ->{$method}($url);
-        return $response;
     }
 
     public function get_shopify_product_inventory_count($product_id)
     {
         $url = sprintf('products/%s.json', $product_id);
         $response = $this->shopify_call($url);
-        if ($response['product']['product_type'] == 'drum kit') { //If this product is within specific product type
+        if ($response['product']['product_type'] == env('SHOPIFY_PREFFERED_CATEGORY')) { //If this product is within specific product type
             return [
                 'sku' => $response['product']['variants'][0]['sku'],
                 'inventory_quantity' => $response['product']['variants'][0]['inventory_quantity'],
@@ -77,7 +76,7 @@ class ShopifyController extends Controller
     {
         $url = sprintf('products/%s.json', $product_id);
         $response = $this->shopify_call($url);
-        if ($response['product']['product_type'] == 'drum kit') { //If this product is within specific product type
+        if ($response['product']['product_type'] == env('SHOPIFY_PREFFERED_CATEGORY')) { //If this product is within specific product type
             return [
                 'inventory_quantity' => $response['product']['variants'][0]['inventory_quantity'],
                 'inventory_item_id' => $response['product']['variants'][0]['inventory_item_id'],
@@ -99,7 +98,7 @@ class ShopifyController extends Controller
         $productsFetched = 0;
 
         $queryParams = [
-                // 'product_type' => 'drum kit',
+                // 'product_type' => 'drum kit', //This parameter is only required in first request
                 'limit' => 250
             ];
 
@@ -159,6 +158,7 @@ class ShopifyController extends Controller
                                         'category' => $product['product_type'],
                                         'sku' => $product['variants'][0]['sku'],
                                         'quantity' => $product['variants'][0]['inventory_quantity'],
+                                        'full_data' => $product,
                                     ]);
             }
 

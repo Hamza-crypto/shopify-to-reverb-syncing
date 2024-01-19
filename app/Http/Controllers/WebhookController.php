@@ -47,7 +47,7 @@ class WebhookController extends Controller
         /*
          * This function get webhook notification from Shopify when product is updated from admin dashboard
          */
-        if ($request->product_type != 'drum kit') {
+        if ($request->product_type != env('SHOPIFY_PREFFERED_CATEGORY')) {
             return 200;
         }
 

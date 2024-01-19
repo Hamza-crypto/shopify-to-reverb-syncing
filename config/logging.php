@@ -122,6 +122,11 @@ return [
             'driver' => 'single',
             'path' => storage_path('logs/shopify.log'),
         ],
+
+        'reverb' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/reverb.log'),
+        ],
     ],
 
 ];

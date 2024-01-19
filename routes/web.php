@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\ChartController;
+use App\Http\Controllers\ReverbController;
 use App\Http\Controllers\ShopifyController;
 use App\Http\Controllers\WebhookController;
+use App\Models\Product;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
@@ -31,13 +33,23 @@ Route::view('/', 'welcome');
 // });
 
 Route::get('/test', function () {
-    $result = 'This is just test page ' . time();
-    echo $result;
-    DiscordAlert::message($result);
+        $pro = Product::where('id', 4)->first();
+        $pro = $pro->full_data;
+        dd($pro);
 });
 
 Route::get('/reset', function () {
     //Artisan::call('migrate:fresh');
+});
+
+Route::get('/fetch_shopify_products', function () {
+    Artisan::call('fetch:shopify-products');
+});
+
+
+Route::prefix('create_shopify_listing')->controller(ReverbController::class)->group(function () {
+    Route::get('/', 'create_listing');
+
 });
 
 Route::prefix('shopify')->controller(WebhookController::class)->group(function () {

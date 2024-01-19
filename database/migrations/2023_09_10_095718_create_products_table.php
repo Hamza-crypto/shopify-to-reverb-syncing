@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('category');
             $table->string('sku');
             $table->integer('quantity');
+            $table->json('full_data');
+            $table->boolean('synced');
             $table->timestamps();
         });
     }

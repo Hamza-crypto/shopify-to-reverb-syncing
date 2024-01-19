@@ -18,9 +18,9 @@ class FetchOrders extends Command
 
         $currentDateTime = Carbon::now();
 
-        $TenDaysAgo = $currentDateTime->subDays(10);
+        $tenDaysAgo = $currentDateTime->subDays(10);
 
-        $orders = $reverb_controller->fetch_all_orders($TenDaysAgo);
+        $orders = $reverb_controller->fetch_all_orders($tenDaysAgo);
 
         foreach ($orders as $order) {
             Order::updateOrCreate(
