@@ -16,12 +16,22 @@ class ReverbController extends Controller
         $url = sprintf('%s/%s', env('REVERB_BASE_URL'), $api_endpoint);
 
         if ($method == 'PUT') {
-            $response = Http::withToken($token)->put($url, $body);
+            $response = Http::withToken($token)
+             ->withHeaders([
+                'Content-Type' => 'application/hal+json',
+                'Accept' => 'application/hal+json',
+                'Accept-Version' => '3.0'
+            ])->put($url, $body);
 
         } elseif ($method == 'GET') {
             $response = Http::withToken($token)->get($url);
         } elseif ($method == 'POST') {
-            $response = Http::withToken($token)->post($url, $body);
+            $response = Http::withToken($token)
+             ->withHeaders([
+                'Content-Type' => 'application/hal+json',
+                'Accept' => 'application/hal+json',
+                'Accept-Version' => '3.0'
+            ])->post($url, $body);
         }
 
         return $response->json();
