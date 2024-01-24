@@ -56,4 +56,16 @@ class WebhookController extends Controller
 
         $this->reverb->update_inventory_on_reverb($sku, $inventory_quantity);
     }
+
+    public function shopify_new_product_added(Request $request)
+    {
+        /*
+         * This function get webhook notification from Shopify when new product is added
+         */
+        if ($request->product_type != env('SHOPIFY_PREFFERED_CATEGORY')) {
+            return 200;
+        }
+
+        $this->reverb->create_listing2($request);
+    }
 }

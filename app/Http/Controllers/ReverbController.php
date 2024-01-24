@@ -149,5 +149,46 @@ class ReverbController extends Controller
         }
     }
 
+    public function create_listing2($product)
+    {
+        $api_endpoint = "listings";
+        $token = env('REVERB_API_KEY');
+        $url = sprintf('%s/%s', env('REVERB_BASE_URL'), $api_endpoint);
+
+        $body = [
+            'categories' => [
+                    [
+                        'uuid' => "d3a11618-98ef-4488-9dc0-84410675aa44",
+                    ]
+                ],
+
+            "photos" => collect($product['images'])->pluck('src')->toArray(),
+            "description" => strip_tags($product['body_html']),
+
+            "price" => [
+                'amount' => $product['variants'][0]['price'],
+                'currency' => 'USD',
+            ],
+            "title" => $product['title'],
+
+            "sku" => $product['variants'][0]['sku'],
+
+            "has_inventory" => true,
+            "inventory" => $product['variants'][0]['inventory_quantity'],
+            "offers_enabled" => true,
+
+        ];
+
+        $response = Http::withToken($token)
+        ->withHeaders([
+            'Content-Type' => 'application/hal+json',
+            'Accept' => 'application/hal+json',
+            'Accept-Version' => '3.0'
+        ])
+        ->post($url, $body);
+        dump($response->status(), $response->json());
+        Log::info($response->json());
+    }
+
 
 }

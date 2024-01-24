@@ -14,5 +14,6 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         'shopify/new_order',
         'shopify/product_updated',
+        'shopify/product_added',
     ];
 }
