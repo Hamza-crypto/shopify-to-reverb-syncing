@@ -83,6 +83,11 @@ class ReverbController extends Controller
         return $this->reverb_call("listings/$product_id");
     }
 
+    public function get_reverb_listing_with_sku($sku)
+    {
+        return $this->reverb_call("my/listings?state=all&sku=$sku");
+    }
+
     public function fetch_orders_from_db()
     {
         return Order::where('inventory_updated', 0)->get();
@@ -90,8 +95,9 @@ class ReverbController extends Controller
 
     public function create_listing()
     {
+        $preferredCategory = strtolower(env('SHOPIFY_PREFFERED_CATEGORY'));
 
-        $products = Product::where('category', env('SHOPIFY_PREFFERED_CATEGORY'))->where('synced', 0)->get();
+        $products = Product::where('category',  $preferredCategory)->where('synced', 0)->get();
         if (!$products) {
             // No unsynced products found
             return;
@@ -151,6 +157,9 @@ class ReverbController extends Controller
 
     public function create_listing2($product)
     {
+        $product_from_reverb = $this->get_reverb_listing_with_sku($product['variants'][0]['sku']);
+        if($product_from_reverb['total'] == 0) return;
+
         $api_endpoint = "listings";
         $token = env('REVERB_API_KEY');
         $url = sprintf('%s/%s', env('REVERB_BASE_URL'), $api_endpoint);

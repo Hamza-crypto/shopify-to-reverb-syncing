@@ -48,25 +48,19 @@ class WebhookController extends Controller
         /*
          * This function get webhook notification from Shopify when product is updated from admin dashboard
          */
-        if ($request->product_type != env('SHOPIFY_PREFFERED_CATEGORY')) {
-            return 200;
+
+        // Convert both product_type and SHOPIFY_PREFERRED_CATEGORY to lowercase for case-insensitive comparison
+        $productType = strtolower($request->product_type);
+        $preferredCategory = strtolower(env('SHOPIFY_PREFFERED_CATEGORY'));
+
+        if ($productType != $preferredCategory) {
+            return response()->json(['message' => 'Not a preferred category.'], 200);
         }
 
         $sku = $request->variants[0]['sku'];
         $inventory_quantity = $request->variants[0]['inventory_quantity'];
 
         $this->reverb->update_inventory_on_reverb($sku, $inventory_quantity);
-    }
-
-    public function shopify_new_product_added(Request $request)
-    {
-        /*
-         * This function get webhook notification from Shopify when new product is added
-         */
-        if ($request->product_type != env('SHOPIFY_PREFFERED_CATEGORY')) {
-            return 200;
-        }
-
-        $this->reverb->create_listing2($request);
+        $this->reverb->create_listing2($request->all());
     }
 }

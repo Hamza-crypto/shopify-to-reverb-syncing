@@ -60,7 +60,11 @@ class ShopifyController extends Controller
     {
         $url = sprintf('products/%s.json', $product_id);
         $response = $this->shopify_call($url);
-        if ($response['product']['product_type'] == env('SHOPIFY_PREFFERED_CATEGORY')) { //If this product is within specific product type
+
+        $productType = strtolower($response['product']['product_type']);
+        $preferredCategory = strtolower(env('SHOPIFY_PREFFERED_CATEGORY'));
+
+        if ( $productType == $preferredCategory) { //If this product is within specific product type
             return [
                 'sku' => $response['product']['variants'][0]['sku'],
                 'inventory_quantity' => $response['product']['variants'][0]['inventory_quantity'],
@@ -76,7 +80,12 @@ class ShopifyController extends Controller
     {
         $url = sprintf('products/%s.json', $product_id);
         $response = $this->shopify_call($url);
-        if ($response['product']['product_type'] == env('SHOPIFY_PREFFERED_CATEGORY')) { //If this product is within specific product type
+
+        $productType = strtolower($response['product']['product_type']);
+        $preferredCategory = strtolower(env('SHOPIFY_PREFFERED_CATEGORY'));
+
+
+        if ($productType == $preferredCategory) { //If this product is within specific product type
             return [
                 'inventory_quantity' => $response['product']['variants'][0]['inventory_quantity'],
                 'inventory_item_id' => $response['product']['variants'][0]['inventory_item_id'],

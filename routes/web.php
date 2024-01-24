@@ -55,7 +55,7 @@ Route::prefix('create_shopify_listing')->controller(ReverbController::class)->gr
 Route::prefix('shopify')->controller(WebhookController::class)->group(function () {
     Route::post('new_order', 'shopify_new_order'); // webhook when new order is placed on shopify
     Route::post('product_updated', 'shopify_product_updated'); //webhook when product inventory quantity is updated  in shopify admin dashboard
-    Route::post('product_added', 'shopify_new_product_added'); //webhook when new product is added into shopify.
+    // Route::post('product_added', 'shopify_new_product_added'); //webhook when new product is added into shopify.
 });
 
 Route::controller(ChartController::class)->group(function () {
