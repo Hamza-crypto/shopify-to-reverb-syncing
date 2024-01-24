@@ -24,6 +24,7 @@ class WebhookController extends Controller
          * This function get webhook notification from Shopify when new order is created
          */
         $product_id = $request->line_items[0]['product_id'];
+        if($product_id == null) return;
 
         app('log')->channel('shopify')->info($request->all());
 
