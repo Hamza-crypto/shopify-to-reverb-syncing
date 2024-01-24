@@ -158,7 +158,7 @@ class ReverbController extends Controller
     public function create_listing2($product)
     {
         $product_from_reverb = $this->get_reverb_listing_with_sku($product['variants'][0]['sku']);
-        if($product_from_reverb['total'] == 0) return;
+        if($product_from_reverb['total'] != 0) return;
 
         $api_endpoint = "listings";
         $token = env('REVERB_API_KEY');
