@@ -32,7 +32,7 @@ class ProcessOrders extends Command
                 $sku = $reverb_product['sku'];
 
                 // Get product details
-                $productObject = Product::where('sku', $sku)->where('category', env('SHOPIFY_PREFFERED_CATEGORY'))->first();
+                $productObject = Product::where('sku', $sku)->first();
 
                 if(!$productObject) {
                     continue;
@@ -41,6 +41,9 @@ class ProcessOrders extends Command
                 //Get shopify product current inventory count and inventory_item_id
                 $shopifyProduct = $shopify_controller->get_shopify_product_inventory_item($productObject->product_id);
 
+                if ($shopifyProduct == null) {
+                    continue;
+                }
 
                 $adjustmentQuantity = $reverb_inventory - $shopifyProduct['inventory_quantity'];
                 if($adjustmentQuantity != 0) {

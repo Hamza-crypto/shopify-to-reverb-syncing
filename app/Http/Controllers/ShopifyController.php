@@ -61,10 +61,7 @@ class ShopifyController extends Controller
         $url = sprintf('products/%s.json', $product_id);
         $response = $this->shopify_call($url);
 
-        $productType = strtolower($response['product']['product_type']);
-        $preferredCategory = strtolower(env('SHOPIFY_PREFFERED_CATEGORY'));
-
-        if ( $productType == $preferredCategory) { //If this product is within specific product type
+        if ( $this->is_valid_tag($response)) { //If this product is within specific product tag
             return [
                 'sku' => $response['product']['variants'][0]['sku'],
                 'inventory_quantity' => $response['product']['variants'][0]['inventory_quantity'],
@@ -81,11 +78,7 @@ class ShopifyController extends Controller
         $url = sprintf('products/%s.json', $product_id);
         $response = $this->shopify_call($url);
 
-        $productType = strtolower($response['product']['product_type']);
-        $preferredCategory = strtolower(env('SHOPIFY_PREFFERED_CATEGORY'));
-
-
-        if ($productType == $preferredCategory) { //If this product is within specific product type
+        if ( $this->is_valid_tag($response)) { //If this product is within specific product type
             return [
                 'inventory_quantity' => $response['product']['variants'][0]['inventory_quantity'],
                 'inventory_item_id' => $response['product']['variants'][0]['inventory_item_id'],
@@ -192,5 +185,13 @@ class ShopifyController extends Controller
         Order::where('id', $db_order_id)->update(['inventory_updated' => 1]);
 
         DiscordAlert::message(sprintf('Inventory updated on shopify for product %s', $shopify_product_id));
+    }
+
+    public function is_valid_tag($response)
+    {
+        $desiredTag = strtolower(env('SHOPIFY_PREFFERED_TAG'));
+        $productTags = array_map('strtolower', explode(', ', $response['product']['tags']));
+
+        return in_array($desiredTag, $productTags) ? true : null;
     }
 }
