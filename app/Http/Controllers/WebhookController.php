@@ -30,7 +30,7 @@ class WebhookController extends Controller
 
         $msg = 'New order created for product '.$product_id;
 
-        DiscordAlert::message($msg);
+        // DiscordAlert::message($msg);
         $response = $this->shopify->get_shopify_product_inventory_count($product_id);
 
         if ($response == null) {
@@ -50,11 +50,11 @@ class WebhookController extends Controller
          */
 
         // Convert both product_type and SHOPIFY_PREFERRED_CATEGORY to lowercase for case-insensitive comparison
-        $productType = strtolower($request->product_type);
-        $preferredCategory = strtolower(env('SHOPIFY_PREFFERED_CATEGORY'));
+        // $productType = strtolower($request->product_type);
+        // $preferredCategory = strtolower(env('SHOPIFY_PREFFERED_CATEGORY'));
 
-        if ($productType != $preferredCategory) {
-            return response()->json(['message' => 'Not a preferred category.'], 200);
+        if ( $this->is_valid_tag($request)) {
+            return response()->json(['message' => 'Not a preferred tag.'], 200);
         }
 
         $sku = $request->variants[0]['sku'];
