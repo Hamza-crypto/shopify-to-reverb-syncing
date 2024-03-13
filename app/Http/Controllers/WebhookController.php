@@ -49,11 +49,10 @@ class WebhookController extends Controller
          * This function get webhook notification from Shopify when product is updated from admin dashboard
          */
 
-        // Convert both product_type and SHOPIFY_PREFERRED_CATEGORY to lowercase for case-insensitive comparison
-        // $productType = strtolower($request->product_type);
-        // $preferredCategory = strtolower(env('SHOPIFY_PREFFERED_CATEGORY'));
+        $desiredTag = strtolower(env('SHOPIFY_PREFFERED_TAG'));
+        $productTags = array_map('strtolower', explode(', ', $request->tags));
 
-        if ( $this->shopify->is_valid_tag($request)) {
+        if ( ! in_array($desiredTag, $productTags)) {
             return response()->json(['message' => 'Not a preferred tag.'], 200);
         }
 
