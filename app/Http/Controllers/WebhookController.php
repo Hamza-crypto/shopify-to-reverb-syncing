@@ -53,7 +53,7 @@ class WebhookController extends Controller
         // $productType = strtolower($request->product_type);
         // $preferredCategory = strtolower(env('SHOPIFY_PREFFERED_CATEGORY'));
 
-        if ( $this->is_valid_tag($request)) {
+        if ( $this->shopify->is_valid_tag($request)) {
             return response()->json(['message' => 'Not a preferred tag.'], 200);
         }
 
