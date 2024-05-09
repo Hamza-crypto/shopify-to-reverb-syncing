@@ -63,5 +63,3 @@ Route::controller(ChartController::class)->group(function () {
     Route::post('income-chart', 'store')->name('chart.store');
     Route::get('chart-data', 'chart_data')->name('chart.data');
 });
-
-//
