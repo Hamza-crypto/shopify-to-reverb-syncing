@@ -38,8 +38,8 @@ Route::get('/test', function () {
     dd($pro);
 });
 
-Route::get('/reset', function () {
-    //Artisan::call('migrate:fresh');
+Route::get('/migrate/fresh', function () {
+    Artisan::call('migrate:fresh --seed');
 });
 
 Route::get('/fetch_shopify_products', function () {
