@@ -7,12 +7,11 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
 {
-
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('fetch:reverb-orders')->hourly();
         $schedule->command('process:reverb-orders')->hourly();
-        // $schedule->command('reverb-test')->everyMinute();
+        $schedule->command('inspire')->everyMinute();
         $schedule->command('telescope:prune --hours=720')->daily();
     }
 

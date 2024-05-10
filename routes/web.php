@@ -40,6 +40,9 @@ Route::get('/test', function () {
 
 Route::get('/migrate/fresh', function () {
     Artisan::call('migrate:fresh --seed');
+
+    dump('Migration Done with Seeding');
+
 });
 
 Route::get('/fetch_shopify_products', function () {
